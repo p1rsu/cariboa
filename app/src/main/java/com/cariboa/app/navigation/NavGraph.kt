@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.cariboa.app.ui.auth.AuthScreen
+import com.cariboa.app.ui.home.HomeScreen
 import com.cariboa.app.ui.onboarding.OnboardingScreen
 
 @Composable
@@ -29,7 +30,12 @@ fun CaribouNavGraph(navController: NavHostController) {
                 }
             })
         }
-        composable(Screen.Home.route) { PlaceholderScreen("Home") }
+        composable(Screen.Home.route) {
+            HomeScreen(
+                onPlanTrip = { navController.navigate(Screen.Wizard.route) },
+                onTripClick = { tripId -> navController.navigate(Screen.Itinerary.createRoute(tripId)) },
+            )
+        }
         composable(Screen.MyTrips.route) { PlaceholderScreen("My Trips") }
         composable(Screen.HiddenGems.route) { PlaceholderScreen("Hidden Gems") }
         composable(Screen.Profile.route) { PlaceholderScreen("Profile") }
