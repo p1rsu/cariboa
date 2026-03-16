@@ -19,3 +19,4 @@ app/release/
 *.log
 .DS_Store
 .claude/
+functions/.env
