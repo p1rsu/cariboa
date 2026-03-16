@@ -44,7 +44,12 @@ fun CaribouNavGraph(navController: NavHostController) {
                 onTripClick = { tripId -> navController.navigate(Screen.Itinerary.createRoute(tripId)) },
             )
         }
-        composable(Screen.MyTrips.route) { PlaceholderScreen("My Trips") }
+        composable(Screen.MyTrips.route) {
+            MyTripsScreen(
+                onTripClick = { tripId -> navController.navigate(Screen.Itinerary.createRoute(tripId)) },
+                onPlanTrip = { navController.navigate(Screen.Wizard.route) },
+            )
+        }
         composable(Screen.HiddenGems.route) {
             HiddenGemsScreen(
                 onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
