@@ -13,8 +13,11 @@ import androidx.navigation.navArgument
 import com.cariboa.app.ui.auth.AuthScreen
 import com.cariboa.app.ui.hiddengems.HiddenGemsScreen
 import com.cariboa.app.ui.home.HomeScreen
+import com.cariboa.app.ui.hotels.HotelSearchScreen
 import com.cariboa.app.ui.itinerary.ItineraryScreen
 import com.cariboa.app.ui.onboarding.OnboardingScreen
+import com.cariboa.app.ui.profile.ProfileScreen
+import com.cariboa.app.ui.trips.MyTripsScreen
 import com.cariboa.app.ui.wizard.WizardScreen
 
 @Composable
@@ -47,7 +50,21 @@ fun CaribouNavGraph(navController: NavHostController) {
                 onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
             )
         }
-        composable(Screen.Profile.route) { PlaceholderScreen("Profile") }
+        composable(Screen.Profile.route) {
+            ProfileScreen(
+                onSignOut = {
+                    navController.navigate(Screen.Auth.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onDeleteAccount = {
+                    navController.navigate(Screen.Auth.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                },
+                onUpgradeToPro = { navController.navigate(Screen.Paywall.route) },
+            )
+        }
         composable(Screen.Wizard.route) {
             WizardScreen(
                 onNavigateToItinerary = { tripId ->
@@ -64,7 +81,16 @@ fun CaribouNavGraph(navController: NavHostController) {
         ) {
             ItineraryScreen(onBack = { navController.popBackStack() })
         }
-        composable(Screen.HotelSearch.route) { PlaceholderScreen("Hotel Search") }
+        composable(
+            Screen.HotelSearch.route,
+            arguments = listOf(navArgument("destination") { type = NavType.StringType }),
+        ) { backStackEntry ->
+            val destination = backStackEntry.arguments?.getString("destination") ?: ""
+            HotelSearchScreen(
+                initialDestination = destination,
+                onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
+            )
+        }
         composable(Screen.Paywall.route) { PlaceholderScreen("Paywall") }
     }
 }
