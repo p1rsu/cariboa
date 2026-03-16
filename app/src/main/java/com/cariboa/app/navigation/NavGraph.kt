@@ -6,11 +6,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.cariboa.app.ui.auth.AuthScreen
+import com.cariboa.app.ui.hiddengems.HiddenGemsScreen
 import com.cariboa.app.ui.home.HomeScreen
+import com.cariboa.app.ui.itinerary.ItineraryScreen
 import com.cariboa.app.ui.onboarding.OnboardingScreen
+import com.cariboa.app.ui.wizard.WizardScreen
 
 @Composable
 fun CaribouNavGraph(navController: NavHostController) {
@@ -37,10 +42,28 @@ fun CaribouNavGraph(navController: NavHostController) {
             )
         }
         composable(Screen.MyTrips.route) { PlaceholderScreen("My Trips") }
-        composable(Screen.HiddenGems.route) { PlaceholderScreen("Hidden Gems") }
+        composable(Screen.HiddenGems.route) {
+            HiddenGemsScreen(
+                onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
+            )
+        }
         composable(Screen.Profile.route) { PlaceholderScreen("Profile") }
-        composable(Screen.Wizard.route) { PlaceholderScreen("Trip Wizard") }
-        composable(Screen.Itinerary.route) { PlaceholderScreen("Itinerary") }
+        composable(Screen.Wizard.route) {
+            WizardScreen(
+                onNavigateToItinerary = { tripId ->
+                    navController.navigate(Screen.Itinerary.createRoute(tripId)) {
+                        popUpTo(Screen.Wizard.route) { inclusive = true }
+                    }
+                },
+                onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
+            )
+        }
+        composable(
+            Screen.Itinerary.route,
+            arguments = listOf(navArgument("tripId") { type = NavType.StringType }),
+        ) {
+            ItineraryScreen(onBack = { navController.popBackStack() })
+        }
         composable(Screen.HotelSearch.route) { PlaceholderScreen("Hotel Search") }
         composable(Screen.Paywall.route) { PlaceholderScreen("Paywall") }
     }
