@@ -16,14 +16,29 @@ import com.cariboa.app.ui.home.HomeScreen
 import com.cariboa.app.ui.hotels.HotelSearchScreen
 import com.cariboa.app.ui.itinerary.ItineraryScreen
 import com.cariboa.app.ui.onboarding.OnboardingScreen
+import com.cariboa.app.ui.paywall.PaywallScreen
 import com.cariboa.app.ui.profile.ProfileScreen
+import com.cariboa.app.ui.splash.SplashScreen
 import com.cariboa.app.ui.trips.MyTripsScreen
 import com.cariboa.app.ui.wizard.WizardScreen
 
 @Composable
 fun CaribouNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Splash.route) {
-        composable(Screen.Splash.route) { PlaceholderScreen("Splash") }
+        composable(Screen.Splash.route) {
+            SplashScreen(
+                onNavigateToHome = {
+                    navController.navigate(Screen.Home.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+                onNavigateToOnboarding = {
+                    navController.navigate(Screen.Onboarding.route) {
+                        popUpTo(Screen.Splash.route) { inclusive = true }
+                    }
+                },
+            )
+        }
         composable(Screen.Onboarding.route) {
             OnboardingScreen(onComplete = {
                 navController.navigate(Screen.Auth.route) {
@@ -96,7 +111,7 @@ fun CaribouNavGraph(navController: NavHostController) {
                 onNavigateToPaywall = { navController.navigate(Screen.Paywall.route) },
             )
         }
-        composable(Screen.Paywall.route) { PlaceholderScreen("Paywall") }
+        composable(Screen.Paywall.route) { PaywallScreen() }
     }
 }
 
