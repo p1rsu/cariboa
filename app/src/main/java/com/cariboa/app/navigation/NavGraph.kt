@@ -8,13 +8,27 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.cariboa.app.ui.auth.AuthScreen
+import com.cariboa.app.ui.onboarding.OnboardingScreen
 
 @Composable
 fun CaribouNavGraph(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screen.Splash.route) {
         composable(Screen.Splash.route) { PlaceholderScreen("Splash") }
-        composable(Screen.Onboarding.route) { PlaceholderScreen("Onboarding") }
-        composable(Screen.Auth.route) { PlaceholderScreen("Auth") }
+        composable(Screen.Onboarding.route) {
+            OnboardingScreen(onComplete = {
+                navController.navigate(Screen.Auth.route) {
+                    popUpTo(Screen.Onboarding.route) { inclusive = true }
+                }
+            })
+        }
+        composable(Screen.Auth.route) {
+            AuthScreen(onAuthenticated = {
+                navController.navigate(Screen.Home.route) {
+                    popUpTo(Screen.Auth.route) { inclusive = true }
+                }
+            })
+        }
         composable(Screen.Home.route) { PlaceholderScreen("Home") }
         composable(Screen.MyTrips.route) { PlaceholderScreen("My Trips") }
         composable(Screen.HiddenGems.route) { PlaceholderScreen("Hidden Gems") }
